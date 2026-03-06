@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>関節可動域と柔軟性評価・学習アプリ</title>
+<title>関節可動域と柔軟性評価</title>
 <style>
 body { font-family: sans-serif; background-color: #faf5ff; color: #333; margin: 0; padding: 20px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
 #app-wrapper { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
@@ -81,23 +81,50 @@ document.getElementById('footer-logo-img').addEventListener('error', function() 
 const quizData = [
 { question: "「自動可動域(AROM)」の説明として正しいものはどれか？", choices: ["本人の力によって動かす範囲", "他者の力で動かした際の最大範囲", "関節包が許容する限界の範囲", "痛みを感じる手前までの範囲"], answer: "本人の力によって動かす範囲", image: "arom.png" },
 { question: "「他動可動域(PROM)」を測定する主な目的はどれか？", choices: ["本人の最大筋力を測定するため", "筋力・疼痛・関節包の制限を区別するため", "有酸素能力を評価するため", "神経の伝達速度を測るため"], answer: "筋力・疼痛・関節包の制限を区別するため", image: "prom.png" },
-{ question: "肩関節(肩甲上腕関節)の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜125°", "0〜145°", "0〜180°"], answer: "0〜180°", image: "shoulder_flexion.png" },
+{ question: "肩関節の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜125°", "0〜145°", "0〜180°"], answer: "0〜180°", image: "shoulder_flexion.png" },
 { question: "肩関節の「伸展」の基準可動域はどれか？", choices: ["0〜20°", "0〜50〜60°", "0〜90°", "0〜180°"], answer: "0〜50〜60°", image: "shoulder_extension.png" },
+{ question: "肩関節の「外転」の基準可動域はどれか？", choices: ["0〜90°", "0〜130°", "0〜180°", "0〜45°"], answer: "0〜180°", image: "shoulder_abduction.png" },
+{ question: "肩関節の「内転」の基準可動域はどれか？", choices: ["0〜30〜50°", "0〜90°", "0〜15°", "0〜180°"], answer: "0〜30〜50°", image: "shoulder_adduction.png" },
 { question: "肩関節の「外旋」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "10〜70°"], answer: "0〜60°", image: "shoulder_er.png" },
+{ question: "肩関節の「内旋」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "10〜70°"], answer: "10〜70°", image: "shoulder_ir.png" },
 { question: "肘関節の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜125°", "0〜145°", "0〜180°"], answer: "0〜145°", image: "elbow_flexion.png" },
+{ question: "肘関節の「伸展」の基準可動域はどれか？", choices: ["145〜0°", "90〜0°", "180〜0°", "125〜0°"], answer: "145〜0°", image: "elbow_extension.png" },
+{ question: "前腕の「回内」の基準可動域はどれか？", choices: ["0〜45°", "0〜70°", "0〜90°", "0〜180°"], answer: "0〜90°", image: "forearm_pronation.png" },
+{ question: "前腕の「回外」の基準可動域はどれか？", choices: ["0〜45°", "0〜70°", "0〜90°", "0〜180°"], answer: "0〜90°", image: "forearm_supination.png" },
+{ question: "手関節の「背屈(伸展)」の基準可動域はどれか？", choices: ["0〜20°", "0〜70°", "0〜90°", "0〜145°"], answer: "0〜70°", image: "wrist_dorsiflexion.png" },
+{ question: "手関節の「掌屈(屈曲)」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜80°", "0〜130°"], answer: "0〜80°", image: "wrist_palmarflexion.png" },
+{ question: "手関節の「橈屈(とうくつ)」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜70°", "0〜90°"], answer: "0〜20°", image: "wrist_radial.png" },
+{ question: "手関節の「尺屈(しゃくくつ)」の基準可動域はどれか？", choices: ["0〜20°", "0〜30〜45°", "0〜70°", "0〜90°"], answer: "0〜30〜45°", image: "wrist_ulnar.png" },
 { question: "股関節の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜125°", "0〜145°", "0〜180°"], answer: "0〜125°", image: "hip_flexion.png" },
 { question: "股関節の「伸展」の基準可動域はどれか？", choices: ["0〜15°", "0〜30°", "0〜45°", "0〜60°"], answer: "0〜15°", image: "hip_extension.png" },
+{ question: "股関節の「外転」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜90°", "0〜125°"], answer: "0〜45°", image: "hip_abduction.png" },
+{ question: "股関節の「内転」の基準可動域はどれか？", choices: ["0〜15°", "0〜20〜30°", "0〜45°", "0〜90°"], answer: "0〜20〜30°", image: "hip_adduction.png" },
+{ question: "股関節の「外旋」の基準可動域はどれか？", choices: ["0〜15°", "0〜30°", "0〜45°", "0〜90°"], answer: "0〜45°", image: "hip_er.png" },
+{ question: "股関節の「内旋」の基準可動域はどれか？", choices: ["0〜15°", "10〜45°", "0〜90°", "0〜125°"], answer: "10〜45°", image: "hip_ir.png" },
 { question: "膝関節の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜110°", "0〜130〜150°", "0〜180°"], answer: "0〜130〜150°", image: "knee_flexion.png" },
-{ question: "足関節(足首)の「背屈」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜20°", image: "ankle_dorsiflexion.png" },
-{ question: "足関節(足首)の「底屈」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜45°", image: "ankle_plantarflexion.png" },
-{ question: "頸部(首)の「回旋(左右)」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜60°", image: "cervical_rotation.png" },
+{ question: "膝関節の「伸展」の基準可動域はどれか？", choices: ["130〜0°", "90〜0°", "180〜0°", "45〜0°"], answer: "130〜0°", image: "knee_extension.png" },
+{ question: "足関節の「背屈」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜20°", image: "ankle_dorsiflexion.png" },
+{ question: "足関節の「底屈」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜45°", image: "ankle_plantarflexion.png" },
+{ question: "足関節の「外反(回外)」の基準可動域はどれか？", choices: ["0〜15°", "0〜20°", "10〜30°", "0〜45°"], answer: "0〜20°", image: "ankle_eversion.png" },
+{ question: "足関節の「内反(回内)」の基準可動域はどれか？", choices: ["0〜15°", "0〜20°", "10〜30°", "0〜45°"], answer: "10〜30°", image: "ankle_inversion.png" },
+{ question: "頸部の「屈曲」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜60°", image: "cervical_flexion.png" },
+{ question: "頸部の「伸展」の基準可動域はどれか？", choices: ["0〜30°", "0〜50°", "0〜80°", "0〜90°"], answer: "0〜50°", image: "cervical_extension.png" },
+{ question: "頸部の「側屈(左右)」の基準可動域はどれか？", choices: ["0〜30°", "0〜50°", "0〜80°", "0〜90°"], answer: "0〜50°", image: "cervical_lateral.png" },
+{ question: "頸部の「回旋(左右)」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜60°", image: "cervical_rotation.png" },
+{ question: "胸腰椎の「屈曲」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "0〜80〜90°"], answer: "0〜80〜90°", image: "thoracolumbar_flexion.png" },
+{ question: "胸腰椎の「伸展」の基準可動域はどれか？", choices: ["0〜30°", "0〜50°", "0〜80°", "0〜90°"], answer: "0〜30°", image: "thoracolumbar_extension.png" },
+{ question: "胸腰椎の「側屈(左右)」の基準可動域はどれか？", choices: ["0〜30°", "0〜50°", "0〜80°", "0〜90°"], answer: "0〜30°", image: "thoracolumbar_lateral.png" },
+{ question: "胸腰椎の「回旋(左右)」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜45°", image: "thoracolumbar_rotation.png" },
 { question: "前屈テストで主に評価される柔軟性の部位はどれか？", choices: ["大腿四頭筋・腹筋群", "ハムストリングス・腰部", "股関節屈筋群・腸腰筋", "下腿三頭筋・アキレス腱"], answer: "ハムストリングス・腰部", image: "forward_bend.png" },
 { question: "Thomas(トーマス)テストが評価する主な内容はどれか？", choices: ["大腿直筋の柔軟性", "股関節屈筋群の短縮", "肩甲上腕リズム", "ハムストリングスの柔軟性"], answer: "股関節屈筋群の短縮", image: "thomas_test.png" },
 { question: "Ely(エリー)テストが評価する主な内容はどれか？", choices: ["大腿直筋の柔軟性", "股関節屈筋群の短縮", "肩甲上腕リズム", "ハムストリングスの柔軟性"], answer: "大腿直筋の柔軟性", image: "ely_test.png" },
+{ question: "肩甲帯の可動テストで確認する主な項目はどれか？", choices: ["股関節伸展角度", "肩甲上腕リズム", "体幹の左右回旋", "足首の動作範囲"], answer: "肩甲上腕リズム", image: "scapulohumeral_rhythm.png" },
 { question: "ハムストリングスの短縮が招く姿勢変化の例として適切なものはどれか？", choices: ["骨盤前傾→腰椎の前弯増強", "骨盤後傾→腰椎のストレス増加", "胸椎後弯→ストレートネック", "肩甲骨上方回旋→肩こり"], answer: "骨盤後傾→腰椎のストレス増加", image: "hamstring_shortness.png" },
 { question: "股関節の伸展不足が招きやすい運動障害の例はどれか？", choices: ["肩のインピンジメント症候群", "腰椎代償による腰痛リスク増", "足底腱膜炎", "テニス肘"], answer: "腰椎代償による腰痛リスク増", image: "hip_extension_deficit.png" },
 { question: "胸椎の回旋制限が招きやすい運動障害の例はどれか？", choices: ["肩のインピンジメント症候群", "腰椎代償による腰痛リスク増", "足底腱膜炎", "テニス肘"], answer: "肩のインピンジメント症候群", image: "thoracic_rotation_deficit.png" },
+{ question: "静的ストレッチの適切な保持時間はどれか？", choices: ["5〜10秒", "20〜30秒", "1〜2分", "5分以上"], answer: "20〜30秒", image: "static_stretch.png" },
 { question: "PNF(固有受容性神経筋促通法)の特徴として適切なものはどれか？", choices: ["関節をリズミカルに動かす", "各筋を20〜30秒静かに保持する", "収縮→弛緩→伸長を組み合わせる", "トリガーポイントを圧迫する"], answer: "収縮→弛緩→伸長を組み合わせる", image: "pnf_stretch.png" },
+{ question: "柔軟性向上指導時の「呼吸法」に関する注意点で適切なものはどれか？", choices: ["呼吸を止めると交感神経優位となり緊張が高まる", "無呼吸のほうが副交感神経が優位になる", "息を吸う時に筋肉は最も弛緩する", "呼吸は柔軟性向上には一切影響しない"], answer: "呼吸を止めると交感神経優位となり緊張が高まる", image: "breathing.png" },
 { question: "柔軟性向上の指導における注意点として適切なものはどれか？", choices: ["呼吸を止めて交感神経を優位にする", "可動域の拡大よりも単なる柔らかさを追求する", "柔軟性向上はパフォーマンス向上と完全にイコールである", "可動域が拡がっても関節の安定性が維持されているかチェックする"], answer: "可動域が拡がっても関節の安定性が維持されているかチェックする", image: "flexibility_caution.png" }
 ];
 
