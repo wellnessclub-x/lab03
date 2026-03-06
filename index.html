@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>関節可動域と柔軟性評価・学習アプリ</title>
+<style>
+body { font-family: sans-serif; background-color: #faf5ff; color: #333; margin: 0; padding: 20px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+#app-wrapper { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
+h1 { font-size: 20px; color: #6b21a8; margin-bottom: 10px; text-align: center; }
+.subtitle { font-size: 14px; color: #666; margin-bottom: 20px; text-align: center; font-weight: bold; }
+#muscle-img-wrapper { width: 100%; max-width: 400px; margin-bottom: 15px; display: none; }
+#muscle-img { width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background-color: #fff; }
+#quiz-container { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; box-sizing: border-box; }
+.question { font-size: 18px; font-weight: bold; margin-bottom: 20px; text-align: center; line-height: 1.4; color: #581c87; }
+.btn { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 14px; background-color: #f8fafc; border: none; border-radius: 5px; cursor: pointer; transition: 0.2s; box-sizing: border-box; text-align: left; line-height: 1.4; }
+.btn:active { background-color: #e2e8f0; }
+.btn.selected { background-color: #f3e8ff; border: 2px solid #9333ea; }
+.nav-container { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
+.nav-btn { flex: 1; padding: 12px; background-color: #9333ea; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+.nav-btn:active { background-color: #7e22ce; }
+.nav-btn:disabled { background-color: #d8b4fe; cursor: not-allowed; }
+#result-screen, #quiz-screen, #logo-container { display: none; text-align: center; }
+#start-screen { display: block; text-align: center; }
+#popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(255,255,255,0.95); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-size: 24px; font-weight: bold; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 1000; width: 80%; max-width: 300px; text-align: center; }
+#popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+.correct-text { color: #9333ea; }
+.incorrect-text { color: #ef4444; }
+.answer-text { font-size: 14px; color: #333; margin-top: 10px; display: block; font-weight: normal; line-height: 1.4; }
+#logo-container { margin-top: 20px; text-align: center; width: 100%; }
+#logo-container img { max-width: 150px; height: auto; opacity: 0.8; }
+.start-logo { max-width: 200px; height: auto; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<div id="app-wrapper">
+
+<div id="muscle-img-wrapper">
+<img id="muscle-img" src="" alt="評価画像" onerror="this.style.display='none'">
+</div>
+
+<div id="quiz-container">
+
+<div id="start-screen">
+<img src="logo.png" alt="ロゴ" class="start-logo" id="start-logo-img">
+<h1>関節可動域と柔軟性評価</h1>
+<p class="subtitle">「続かない運動」を「心地よい習慣へ」。</p>
+<button id="start-btn" class="btn" style="text-align: center; font-size: 16px; background-color: #9333ea; color: white;">学習をスタートする</button>
+</div>
+
+<div id="quiz-screen">
+<h1>関節可動域と柔軟性評価</h1>
+<div id="question-text" class="question"></div>
+<div id="choices-container"></div>
+<div class="nav-container">
+<button id="prev-btn" class="nav-btn">前の問題</button>
+<button id="next-btn" class="nav-btn">次の問題</button>
+</div>
+</div>
+
+<div id="result-screen">
+<h1>学習完了</h1>
+<div id="result-text" style="font-size: 20px; font-weight: bold; margin-top: 20px; color: #6b21a8;"></div>
+<button id="reset-btn" class="btn" style="margin-top: 30px; text-align: center; font-size: 16px; background-color: #9333ea; color: white;">最初からやり直す</button>
+</div>
+
+</div>
+<div id="logo-container">
+<img src="logo.png" alt="ロゴ" id="footer-logo-img">
+</div>
+</div>
+
+<div id="popup"></div>
+
+<script>
+document.getElementById('start-logo-img').addEventListener('error', function() { this.style.display='none'; });
+document.getElementById('footer-logo-img').addEventListener('error', function() { this.style.display='none'; });
+
+const quizData = [
+{ question: "「自動可動域(AROM)」の説明として正しいものはどれか？", choices: ["本人の力によって動かす範囲", "他者の力で動かした際の最大範囲", "関節包が許容する限界の範囲", "痛みを感じる手前までの範囲"], answer: "本人の力によって動かす範囲", image: "arom.png" },
+{ question: "「他動可動域(PROM)」を測定する主な目的はどれか？", choices: ["本人の最大筋力を測定するため", "筋力・疼痛・関節包の制限を区別するため", "有酸素能力を評価するため", "神経の伝達速度を測るため"], answer: "筋力・疼痛・関節包の制限を区別するため", image: "prom.png" },
+{ question: "肩関節(肩甲上腕関節)の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜125°", "0〜145°", "0〜180°"], answer: "0〜180°", image: "shoulder_flexion.png" },
+{ question: "肩関節の「伸展」の基準可動域はどれか？", choices: ["0〜20°", "0〜50〜60°", "0〜90°", "0〜180°"], answer: "0〜50〜60°", image: "shoulder_extension.png" },
+{ question: "肩関節の「外旋」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "10〜70°"], answer: "0〜60°", image: "shoulder_er.png" },
+{ question: "肘関節の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜125°", "0〜145°", "0〜180°"], answer: "0〜145°", image: "elbow_flexion.png" },
+{ question: "股関節の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜125°", "0〜145°", "0〜180°"], answer: "0〜125°", image: "hip_flexion.png" },
+{ question: "股関節の「伸展」の基準可動域はどれか？", choices: ["0〜15°", "0〜30°", "0〜45°", "0〜60°"], answer: "0〜15°", image: "hip_extension.png" },
+{ question: "膝関節の「屈曲」の基準可動域はどれか？", choices: ["0〜90°", "0〜110°", "0〜130〜150°", "0〜180°"], answer: "0〜130〜150°", image: "knee_flexion.png" },
+{ question: "足関節(足首)の「背屈」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜20°", image: "ankle_dorsiflexion.png" },
+{ question: "足関節(足首)の「底屈」の基準可動域はどれか？", choices: ["0〜20°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜45°", image: "ankle_plantarflexion.png" },
+{ question: "頸部(首)の「回旋(左右)」の基準可動域はどれか？", choices: ["0〜30°", "0〜45°", "0〜60°", "0〜90°"], answer: "0〜60°", image: "cervical_rotation.png" },
+{ question: "前屈テストで主に評価される柔軟性の部位はどれか？", choices: ["大腿四頭筋・腹筋群", "ハムストリングス・腰部", "股関節屈筋群・腸腰筋", "下腿三頭筋・アキレス腱"], answer: "ハムストリングス・腰部", image: "forward_bend.png" },
+{ question: "Thomas(トーマス)テストが評価する主な内容はどれか？", choices: ["大腿直筋の柔軟性", "股関節屈筋群の短縮", "肩甲上腕リズム", "ハムストリングスの柔軟性"], answer: "股関節屈筋群の短縮", image: "thomas_test.png" },
+{ question: "Ely(エリー)テストが評価する主な内容はどれか？", choices: ["大腿直筋の柔軟性", "股関節屈筋群の短縮", "肩甲上腕リズム", "ハムストリングスの柔軟性"], answer: "大腿直筋の柔軟性", image: "ely_test.png" },
+{ question: "ハムストリングスの短縮が招く姿勢変化の例として適切なものはどれか？", choices: ["骨盤前傾→腰椎の前弯増強", "骨盤後傾→腰椎のストレス増加", "胸椎後弯→ストレートネック", "肩甲骨上方回旋→肩こり"], answer: "骨盤後傾→腰椎のストレス増加", image: "hamstring_shortness.png" },
+{ question: "股関節の伸展不足が招きやすい運動障害の例はどれか？", choices: ["肩のインピンジメント症候群", "腰椎代償による腰痛リスク増", "足底腱膜炎", "テニス肘"], answer: "腰椎代償による腰痛リスク増", image: "hip_extension_deficit.png" },
+{ question: "胸椎の回旋制限が招きやすい運動障害の例はどれか？", choices: ["肩のインピンジメント症候群", "腰椎代償による腰痛リスク増", "足底腱膜炎", "テニス肘"], answer: "肩のインピンジメント症候群", image: "thoracic_rotation_deficit.png" },
+{ question: "PNF(固有受容性神経筋促通法)の特徴として適切なものはどれか？", choices: ["関節をリズミカルに動かす", "各筋を20〜30秒静かに保持する", "収縮→弛緩→伸長を組み合わせる", "トリガーポイントを圧迫する"], answer: "収縮→弛緩→伸長を組み合わせる", image: "pnf_stretch.png" },
+{ question: "柔軟性向上の指導における注意点として適切なものはどれか？", choices: ["呼吸を止めて交感神経を優位にする", "可動域の拡大よりも単なる柔らかさを追求する", "柔軟性向上はパフォーマンス向上と完全にイコールである", "可動域が拡がっても関節の安定性が維持されているかチェックする"], answer: "可動域が拡がっても関節の安定性が維持されているかチェックする", image: "flexibility_caution.png" }
+];
+
+let currentQuestionIndex = 0;
+let userAnswers = [];
+let isAnimating = false;
+
+document.getElementById("start-btn").addEventListener("click", function() {
+document.getElementById("start-screen").style.display = "none";
+document.getElementById("quiz-screen").style.display = "block";
+document.getElementById("logo-container").style.display = "block";
+document.getElementById("muscle-img-wrapper").style.display = "block";
+currentQuestionIndex = 0;
+userAnswers = new Array(quizData.length).fill(null);
+isAnimating = false;
+loadQuestion();
+});
+
+document.getElementById("prev-btn").addEventListener("click", function() {
+if (isAnimating || currentQuestionIndex === 0) return;
+currentQuestionIndex--;
+loadQuestion();
+});
+
+document.getElementById("next-btn").addEventListener("click", function() {
+if (isAnimating) return;
+if (currentQuestionIndex < quizData.length - 1) {
+currentQuestionIndex++;
+loadQuestion();
+} else {
+showResult();
+}
+});
+
+document.getElementById("reset-btn").addEventListener("click", function() {
+document.getElementById("result-screen").style.display = "none";
+document.getElementById("start-screen").style.display = "block";
+isAnimating = false;
+});
+
+function loadQuestion() {
+const currentQuiz = quizData[currentQuestionIndex];
+document.getElementById("question-text").textContent = "Q" + (currentQuestionIndex + 1) + ". " + currentQuiz.question;
+
+const muscleImg = document.getElementById("muscle-img");
+if (currentQuiz.image) {
+muscleImg.src = currentQuiz.image;
+muscleImg.style.display = "block";
+} else {
+muscleImg.style.display = "none";
+}
+
+const choicesContainer = document.getElementById("choices-container");
+choicesContainer.innerHTML = "";
+
+currentQuiz.choices.forEach(function(choice) {
+const button = document.createElement("button");
+button.textContent = choice;
+button.className = "btn";
+if (userAnswers[currentQuestionIndex] === choice) {
+button.classList.add("selected");
+}
+button.addEventListener("click", function() { checkAnswer(choice); });
+choicesContainer.appendChild(button);
+});
+
+document.getElementById("prev-btn").disabled = (currentQuestionIndex === 0);
+if (currentQuestionIndex === quizData.length - 1) {
+document.getElementById("next-btn").textContent = "結果を見る";
+} else {
+document.getElementById("next-btn").textContent = "次の問題";
+}
+}
+
+function checkAnswer(selectedChoice) {
+if (isAnimating) return;
+isAnimating = true;
+userAnswers[currentQuestionIndex] = selectedChoice;
+const currentQuiz = quizData[currentQuestionIndex];
+const isCorrect = (selectedChoice === currentQuiz.answer);
+const popup = document.getElementById("popup");
+
+if (isCorrect) {
+popup.innerHTML = "<div class='correct-text'>○ 正解！</div>";
+} else {
+popup.innerHTML = "<div class='incorrect-text'>× 不正解...</div><span class='answer-text'>正解は「" + currentQuiz.answer + "」</span>";
+}
+
+popup.classList.add("show");
+loadQuestion();
+
+setTimeout(function() {
+popup.classList.remove("show");
+if (currentQuestionIndex < quizData.length - 1) {
+currentQuestionIndex++;
+loadQuestion();
+} else {
+showResult();
+}
+isAnimating = false;
+}, 1200);
+}
+
+function showResult() {
+document.getElementById("quiz-screen").style.display = "none";
+document.getElementById("logo-container").style.display = "none";
+document.getElementById("muscle-img-wrapper").style.display = "none";
+document.getElementById("result-screen").style.display = "block";
+let score = 0;
+userAnswers.forEach(function(ans, index) {
+if (ans === quizData[index].answer) score++;
+});
+document.getElementById("result-text").textContent = quizData.length + "問中 " + score + " 問正解です！";
+}
+</script>
+
+</body>
+</html>
