@@ -6,31 +6,32 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>関節可動域と柔軟性評価</title>
 <style>
-body { font-family: sans-serif; background-color: #faf5ff; color: #333; margin: 0; padding: 20px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+body { font-family: sans-serif; background-color: #f4f7f9; color: #333; margin: 0; padding: 20px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
 #app-wrapper { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; }
-h1 { font-size: 20px; color: #6b21a8; margin-bottom: 10px; text-align: center; }
+h1 { font-size: 20px; color: #355872; margin-bottom: 10px; text-align: center; }
 .subtitle { font-size: 14px; color: #666; margin-bottom: 20px; text-align: center; font-weight: bold; }
 #muscle-img-wrapper { width: 100%; max-width: 400px; margin-bottom: 15px; display: none; }
 #muscle-img { width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background-color: #fff; }
-#quiz-container { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; box-sizing: border-box; }
-.question { font-size: 18px; font-weight: bold; margin-bottom: 20px; text-align: center; line-height: 1.4; color: #581c87; }
+#quiz-container { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; box-sizing: border-box; touch-action: pan-y; }
+.question { font-size: 18px; font-weight: bold; margin-bottom: 20px; text-align: center; line-height: 1.4; color: #355872; }
 .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 14px; background-color: #f8fafc; border: none; border-radius: 5px; cursor: pointer; transition: 0.2s; box-sizing: border-box; text-align: left; line-height: 1.4; }
 .btn:active { background-color: #e2e8f0; }
-.btn.selected { background-color: #f3e8ff; border: 2px solid #9333ea; }
+.btn.selected { background-color: #e8eef2; border: 2px solid #355872; }
 .nav-container { display: flex; justify-content: space-between; margin-top: 20px; gap: 10px; }
-.nav-btn { flex: 1; padding: 12px; background-color: #9333ea; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: 0.2s; }
-.nav-btn:active { background-color: #7e22ce; }
-.nav-btn:disabled { background-color: #d8b4fe; cursor: not-allowed; }
-#result-screen, #quiz-screen, #logo-container { display: none; text-align: center; }
+.nav-btn { flex: 1; padding: 12px; background-color: #355872; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+.nav-btn:active { background-color: #243c4f; }
+.nav-btn:disabled { background-color: #a0b2c0; cursor: not-allowed; }
+#result-screen, #quiz-screen, #logo-container { display: none; }
 #start-screen { display: block; text-align: center; }
 #popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: rgba(255,255,255,0.95); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); font-size: 24px; font-weight: bold; opacity: 0; pointer-events: none; transition: all 0.3s ease; z-index: 1000; width: 80%; max-width: 300px; text-align: center; }
 #popup.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-.correct-text { color: #9333ea; }
+.correct-text { color: #355872; }
 .incorrect-text { color: #ef4444; }
 .answer-text { font-size: 14px; color: #333; margin-top: 10px; display: block; font-weight: normal; line-height: 1.4; }
 #logo-container { margin-top: 20px; text-align: center; width: 100%; }
 #logo-container img { max-width: 150px; height: auto; opacity: 0.8; }
 .start-logo { max-width: 200px; height: auto; margin-bottom: 20px; }
+#progress-text { font-size: 14px; color: #666; text-align: right; margin-bottom: 10px; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -47,11 +48,11 @@ h1 { font-size: 20px; color: #6b21a8; margin-bottom: 10px; text-align: center; }
 <img src="logo.png" alt="ロゴ" class="start-logo" id="start-logo-img">
 <h1>関節可動域と柔軟性評価</h1>
 <p class="subtitle">「続かない運動」を「心地よい習慣へ」。</p>
-<button id="start-btn" class="btn" style="text-align: center; font-size: 16px; background-color: #9333ea; color: white;">学習をスタートする</button>
+<button id="start-btn" class="btn" style="text-align: center; font-size: 16px; background-color: #355872; color: white;">学習をスタートする</button>
 </div>
 
 <div id="quiz-screen">
-<h1>関節可動域と柔軟性評価</h1>
+<div id="progress-text"></div>
 <div id="question-text" class="question"></div>
 <div id="choices-container"></div>
 <div class="nav-container">
@@ -62,8 +63,8 @@ h1 { font-size: 20px; color: #6b21a8; margin-bottom: 10px; text-align: center; }
 
 <div id="result-screen">
 <h1>学習完了</h1>
-<div id="result-text" style="font-size: 20px; font-weight: bold; margin-top: 20px; color: #6b21a8;"></div>
-<button id="reset-btn" class="btn" style="margin-top: 30px; text-align: center; font-size: 16px; background-color: #9333ea; color: white;">最初からやり直す</button>
+<div id="result-text" style="font-size: 20px; font-weight: bold; margin-top: 20px; color: #355872; text-align: center;"></div>
+<button id="reset-btn" class="btn" style="margin-top: 30px; text-align: center; font-size: 16px; background-color: #355872; color: white;">最初からやり直す</button>
 </div>
 
 </div>
@@ -132,6 +133,10 @@ let currentQuestionIndex = 0;
 let userAnswers = [];
 let isAnimating = false;
 
+// フリック操作用の変数
+let touchStartX = 0;
+let touchEndX = 0;
+
 document.getElementById("start-btn").addEventListener("click", function() {
 document.getElementById("start-screen").style.display = "none";
 document.getElementById("quiz-screen").style.display = "block";
@@ -165,8 +170,39 @@ document.getElementById("start-screen").style.display = "block";
 isAnimating = false;
 });
 
+// フリック操作のイベントリスナー
+const quizContainer = document.getElementById("quiz-container");
+quizContainer.addEventListener("touchstart", function(e) {
+touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+
+quizContainer.addEventListener("touchend", function(e) {
+touchEndX = e.changedTouches[0].screenX;
+handleSwipe();
+}, {passive: true});
+
+function handleSwipe() {
+const threshold = 50; // フリックと判定する最低移動距離
+if (touchEndX < touchStartX - threshold) {
+// 左へフリック（次の問題へ）
+if (!isAnimating && currentQuestionIndex < quizData.length - 1) {
+document.getElementById("next-btn").click();
+}
+}
+if (touchEndX > touchStartX + threshold) {
+// 右へフリック（前の問題へ）
+if (!isAnimating && currentQuestionIndex > 0) {
+document.getElementById("prev-btn").click();
+}
+}
+}
+
 function loadQuestion() {
 const currentQuiz = quizData[currentQuestionIndex];
+
+// 現在地の表示を更新
+document.getElementById("progress-text").textContent = (currentQuestionIndex + 1) + " / " + quizData.length + " 問目";
+
 document.getElementById("question-text").textContent = "Q" + (currentQuestionIndex + 1) + ". " + currentQuiz.question;
 
 const muscleImg = document.getElementById("muscle-img");
