@@ -13,9 +13,8 @@ h1 { font-size: 20px; color: #355872; margin-bottom: 10px; text-align: center; }
 #muscle-img-wrapper { width: 100%; max-width: 400px; margin-bottom: 15px; display: none; }
 #muscle-img { width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background-color: #fff; pointer-events: none; }
 #quiz-container { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; box-sizing: border-box; min-height: 300px; display: flex; flex-direction: column; justify-content: center; }
-.question { font-size: 24px; font-weight: bold; margin-bottom: 20px; text-align: center; line-height: 1.4; color: #355872; pointer-events: none; }
-#furigana-container { display: none; font-size: 16px; color: #888; margin-bottom: 10px; text-align: center; line-height: 1.2; pointer-events: none; }
-#answer-container { display: none; font-size: 28px; font-weight: bold; color: #ef4444; margin-bottom: 20px; text-align: center; line-height: 1.4; pointer-events: none; }
+.question { font-size: 20px; font-weight: bold; margin-bottom: 20px; text-align: center; line-height: 1.5; color: #355872; pointer-events: none; }
+#answer-container { display: none; font-size: 17px; font-weight: bold; color: #ef4444; margin-bottom: 20px; text-align: left; line-height: 1.6; pointer-events: none; width: 100%; box-sizing: border-box; padding: 0 10px; }
 .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; transition: 0.2s; box-sizing: border-box; }
 .btn:active { opacity: 0.8; }
 #result-screen, #logo-container { display: none; text-align: center; }
@@ -48,7 +47,6 @@ h1 { font-size: 20px; color: #355872; margin-bottom: 10px; text-align: center; }
 <div id="quiz-screen">
 <div id="progress-text"></div>
 <div id="question-text" class="question"></div>
-<div id="furigana-container"></div>
 <div id="answer-container"></div>
 <div class="tap-guide">画面のどこかをタップ、または左右にスワイプ</div>
 </div>
@@ -75,53 +73,53 @@ document.getElementById('start-logo-img').addEventListener('error', function() {
 document.getElementById('footer-logo-img').addEventListener('error', function() { this.style.display='none'; });
 
 const quizData = [
-{ question: "「自動可動域(AROM)」の説明として正しいものは？", answer: "本人の力によって動かす範囲", furigana: "ほんにんのちからによってうごかすはんい", image: "arom.png" },
-{ question: "「他動可動域(PROM)」を測定する主な目的は？", answer: "筋力・疼痛・関節包の制限を区別するため", furigana: "きんりょく・とうつう・かんせつほうのせいげんをくべつするため", image: "prom.png" },
-{ question: "肩関節の「屈曲」の基準可動域は？", answer: "0〜180°", furigana: "0〜180ど", image: "shoulder_flexion.png" },
-{ question: "肩関節の「伸展」の基準可動域は？", answer: "0〜50〜60°", furigana: "0〜50〜60ど", image: "shoulder_extension.png" },
-{ question: "肩関節の「外転」の基準可動域は？", answer: "0〜180°", furigana: "0〜180ど", image: "shoulder_abduction.png" },
-{ question: "肩関節の「内転」の基準可動域は？", answer: "0〜30〜50°", furigana: "0〜30〜50ど", image: "shoulder_adduction.png" },
-{ question: "肩関節の「外旋」の基準可動域は？", answer: "0〜60°", furigana: "0〜60ど", image: "shoulder_er.png" },
-{ question: "肩関節の「内旋」の基準可動域は？", answer: "0〜70°", furigana: "0〜70ど", image: "shoulder_ir.png" },
-{ question: "肘関節の「屈曲」の基準可動域は？", answer: "0〜145°", furigana: "0〜145ど", image: "elbow_flexion.png" },
-{ question: "肘関節の「伸展」の基準可動域は？", answer: "145〜0°", furigana: "145〜0ど", image: "elbow_extension.png" },
-{ question: "前腕の「回内」の基準可動域は？", answer: "0〜90°", furigana: "0〜90ど", image: "forearm_pronation.png" },
-{ question: "前腕の「回外」の基準可動域は？", answer: "0〜90°", furigana: "0〜90ど", image: "forearm_supination.png" },
-{ question: "手関節の「背屈(伸展)」の基準可動域は？", answer: "0〜70°", furigana: "0〜70ど", image: "wrist_dorsiflexion.png" },
-{ question: "手関節の「掌屈(屈曲)」の基準可動域は？", answer: "0〜80°", furigana: "0〜80ど", image: "wrist_palmarflexion.png" },
-{ question: "手関節の「橈屈(とうくつ)」の基準可動域は？", answer: "0〜20°", furigana: "0〜20ど", image: "wrist_radial.png" },
-{ question: "手関節の「尺屈(しゃくくつ)」の基準可動域は？", answer: "0〜30〜45°", furigana: "0〜30〜45ど", image: "wrist_ulnar.png" },
-{ question: "股関節の「屈曲」の基準可動域は？", answer: "0〜125°", furigana: "0〜125ど", image: "hip_flexion.png" },
-{ question: "股関節の「伸展」の基準可動域は？", answer: "0〜15°", furigana: "0〜15ど", image: "hip_extension.png" },
-{ question: "股関節の「外転」の基準可動域は？", answer: "0〜45°", furigana: "0〜45ど", image: "hip_abduction.png" },
-{ question: "股関節の「内転」の基準可動域は？", answer: "0〜20〜30°", furigana: "0〜20〜30ど", image: "hip_adduction.png" },
-{ question: "股関節の「外旋」の基準可動域は？", answer: "0〜45°", furigana: "0〜45ど", image: "hip_er.png" },
-{ question: "股関節の「内旋」の基準可動域は？", answer: "0〜45°", furigana: "0〜45ど", image: "hip_ir.png" },
-{ question: "膝関節の「屈曲」の基準可動域は？", answer: "0〜130〜150°", furigana: "0〜130〜150ど", image: "knee_flexion.png" },
-{ question: "膝関節の「伸展」の基準可動域は？", answer: "130〜0°", furigana: "130〜0ど", image: "knee_extension.png" },
-{ question: "足関節の「背屈」の基準可動域は？", answer: "0〜20°", furigana: "0〜20ど", image: "ankle_dorsiflexion.png" },
-{ question: "足関節の「底屈」の基準可動域は？", answer: "0〜45°", furigana: "0〜45ど", image: "ankle_plantarflexion.png" },
-{ question: "足関節の「外反(回外)」の基準可動域は？", answer: "0〜20°", furigana: "0〜20ど", image: "ankle_eversion.png" },
-{ question: "足関節の「内反(回内)」の基準可動域は？", answer: "0〜30°", furigana: "0〜30ど", image: "ankle_inversion.png" },
-{ question: "頸部の「屈曲」の基準可動域は？", answer: "0〜60°", furigana: "0〜60ど", image: "cervical_flexion.png" },
-{ question: "頸部の「伸展」の基準可動域は？", answer: "0〜50°", furigana: "0〜50ど", image: "cervical_extension.png" },
-{ question: "頸部の「側屈(左右)」の基準可動域は？", answer: "0〜50°", furigana: "0〜50ど", image: "cervical_lateral.png" },
-{ question: "頸部の「回旋(左右)」の基準可動域は？", answer: "0〜60°", furigana: "0〜60ど", image: "cervical_rotation.png" },
-{ question: "胸腰椎の「屈曲」の基準可動域は？", answer: "0〜80〜90°", furigana: "0〜80〜90ど", image: "thoracolumbar_flexion.png" },
-{ question: "胸腰椎の「伸展」の基準可動域は？", answer: "0〜30°", furigana: "0〜30ど", image: "thoracolumbar_extension.png" },
-{ question: "胸腰椎の「側屈(左右)」の基準可動域は？", answer: "0〜30°", furigana: "0〜30ど", image: "thoracolumbar_lateral.png" },
-{ question: "胸腰椎の「回旋(左右)」の基準可動域は？", answer: "0〜45°", furigana: "0〜45ど", image: "thoracolumbar_rotation.png" },
-{ question: "前屈テストで主に評価される柔軟性の部位は？", answer: "ハムストリングス・腰部", furigana: "はむすとりんぐす・ようぶ", image: "forward_bend.png" },
-{ question: "Thomas(トーマス)テストが評価する主な内容は？", answer: "股関節屈筋群の短縮", furigana: "こかんせつくっきんぐんのたんしゅく", image: "thomas_test.png" },
-{ question: "Ely(エリー)テストが評価する主な内容は？", answer: "大腿直筋の柔軟性", furigana: "だいたいちょくきんのじゅうなんせい", image: "ely_test.png" },
-{ question: "肩甲帯の可動テストで確認する主な項目は？", answer: "肩甲上腕リズム", furigana: "けんこうじょうわんりずむ", image: "scapulohumeral_rhythm.png" },
-{ question: "ハムストリングスの短縮が招く姿勢変化の例として適切なものは？", answer: "骨盤後傾→腰椎のストレス増加", furigana: "こつばんこうけい → ようついのすとれすぞうか", image: "hamstring_shortness.png" },
-{ question: "股関節の伸展不足が招きやすい運動障害の例は？", answer: "腰椎代償による腰痛リスク増", furigana: "ようついだいしょうによるようつうりすくぞう", image: "hip_extension_deficit.png" },
-{ question: "胸椎の回旋制限が招きやすい運動障害の例は？", answer: "肩のインピンジメント症候群", furigana: "かたのいんぴんじめんとしょうこうぐん", image: "thoracic_rotation_deficit.png" },
-{ question: "静的ストレッチの適切な保持時間は？", answer: "20〜30秒", furigana: "20〜30びょう", image: "static_stretch.png" },
-{ question: "PNF(固有受容性神経筋促通法)の特徴として適切なものは？", answer: "収縮→弛緩→伸長を組み合わせる", furigana: "しゅうしゅく → しかん → しんちょうをくみあわせる", image: "pnf_stretch.png" },
-{ question: "柔軟性向上指導時の「呼吸法」に関する注意点で適切なものは？", answer: "呼吸を止めると交感神経優位となり緊張が高まる", furigana: "こきゅうをとめるとこうかんしんけいゆういとなりきんちょうがたかまる", image: "breathing.png" },
-{ question: "柔軟性向上の指導における注意点として適切なものは？", answer: "可動域が拡がっても関節の安定性が維持されているかチェックする", furigana: "かどういきがひろがってもかんせつのあんていせいが いじされているかちぇっくする", image: "flexibility_caution.png" }
+{ question: "「自動可動域(AROM)」とはどのような可動域か？", answer: "本人の筋力によって関節を動かすことができる範囲。", image: "arom.png" },
+{ question: "「他動可動域(PROM)」を評価する主な目的は何か？", answer: "筋力低下による制限か、関節包や靭帯などの組織による制限かを区別するため。", image: "prom.png" },
+{ question: "肩関節「屈曲」の参考可動域は？", answer: "0〜180°", image: "shoulder_flexion.png" },
+{ question: "肩関節「伸展」の参考可動域は？", answer: "0〜50°", image: "shoulder_extension.png" },
+{ question: "肩関節「外転」の参考可動域は？", answer: "0〜180°", image: "shoulder_abduction.png" },
+{ question: "肩関節「内転」の参考可動域は？", answer: "0〜0°（体幹に接するまで） ※解剖学的肢位からの場合", image: "shoulder_adduction.png" },
+{ question: "肩関節「外旋」の参考可動域は？", answer: "0〜60°", image: "shoulder_er.png" },
+{ question: "肩関節「内旋」の参考可動域は？", answer: "0〜80°", image: "shoulder_ir.png" },
+{ question: "肘関節「屈曲」の参考可動域は？", answer: "0〜145°", image: "elbow_flexion.png" },
+{ question: "肘関節「伸展」の参考可動域は？", answer: "0°", image: "elbow_extension.png" },
+{ question: "前腕「回内」の参考可動域は？", answer: "0〜90°", image: "forearm_pronation.png" },
+{ question: "前腕「回外」の参考可動域は？", answer: "0〜90°", image: "forearm_supination.png" },
+{ question: "手関節「背屈(伸展)」の参考可動域は？", answer: "0〜70°", image: "wrist_dorsiflexion.png" },
+{ question: "手関節「掌屈(屈曲)」の参考可動域は？", answer: "0〜90°", image: "wrist_palmarflexion.png" },
+{ question: "手関節「橈屈(とうくつ)」の参考可動域は？", answer: "0〜25°", image: "wrist_radial.png" },
+{ question: "手関節「尺屈(しゃくくつ)」の参考可動域は？", answer: "0〜55°", image: "wrist_ulnar.png" },
+{ question: "股関節「屈曲」の参考可動域は？", answer: "0〜125°", image: "hip_flexion.png" },
+{ question: "股関節「伸展」の参考可動域は？", answer: "0〜15°", image: "hip_extension.png" },
+{ question: "股関節「外転」の参考可動域は？", answer: "0〜45°", image: "hip_abduction.png" },
+{ question: "股関節「内転」の参考可動域は？", answer: "0〜20°", image: "hip_adduction.png" },
+{ question: "股関節「外旋」の参考可動域は？", answer: "0〜45°", image: "hip_er.png" },
+{ question: "股関節「内旋」の参考可動域は？", answer: "0〜45°", image: "hip_ir.png" },
+{ question: "膝関節「屈曲」の参考可動域は？", answer: "0〜130°", image: "knee_flexion.png" },
+{ question: "膝関節「伸展」の参考可動域は？", answer: "0°", image: "knee_extension.png" },
+{ question: "足関節「背屈」の参考可動域は？", answer: "0〜20°", image: "ankle_dorsiflexion.png" },
+{ question: "足関節「底屈」の参考可動域は？", answer: "0〜45°", image: "ankle_plantarflexion.png" },
+{ question: "足関節「外反」の参考可動域は？", answer: "0〜20°", image: "ankle_eversion.png" },
+{ question: "足関節「内反」の参考可動域は？", answer: "0〜30°", image: "ankle_inversion.png" },
+{ question: "頸部「屈曲」の参考可動域は？", answer: "0〜60°", image: "cervical_flexion.png" },
+{ question: "頸部「伸展」の参考可動域は？", answer: "0〜50°", image: "cervical_extension.png" },
+{ question: "頸部「側屈(左右)」の参考可動域は？", answer: "0〜50°", image: "cervical_lateral.png" },
+{ question: "頸部「回旋(左右)」の参考可動域は？", answer: "0〜60°", image: "cervical_rotation.png" },
+{ question: "胸腰部「屈曲」の参考可動域は？", answer: "0〜45°", image: "thoracolumbar_flexion.png" },
+{ question: "胸腰部「伸展」の参考可動域は？", answer: "0〜30°", image: "thoracolumbar_extension.png" },
+{ question: "胸腰部「側屈(左右)」の参考可動域は？", answer: "0〜50°", image: "thoracolumbar_lateral.png" },
+{ question: "胸腰部「回旋(左右)」の参考可動域は？", answer: "0〜40°", image: "thoracolumbar_rotation.png" },
+{ question: "指床間距離(FFD)などの「前屈テスト」で主に評価される部位は？", answer: "ハムストリングス、殿筋群、および腰背部の筋群の柔軟性。", image: "forward_bend.png" },
+{ question: "Thomas(トーマス)テストは、どの筋肉の短縮を評価するか？", answer: "腸腰筋（股関節屈筋群）。仰臥位で反対側の股関節を抱え込むように屈曲させた際、テスト側の膝裏がベッドから浮き上がるかを確認する。", image: "thomas_test.png" },
+{ question: "Ely(エリー)テストは、どの筋肉の短縮を評価するか？", answer: "大腿直筋。腹臥位で膝関節を他動的に屈曲させた際、尻上がり現象（骨盤の前傾と股関節の屈曲）が起きるかを確認する。", image: "ely_test.png" },
+{ question: "肩関節の挙上動作において、肩甲上腕関節と肩甲胸郭関節の連動性を何と呼ぶか？", answer: "肩甲上腕リズム。通常、腕の挙上に対して、肩甲上腕関節と肩甲胸郭関節（肩甲骨の上方回旋）は「2：1」の割合で動く。", image: "scapulohumeral_rhythm.png" },
+{ question: "ハムストリングスの短縮（柔軟性低下）は、どのような姿勢変化を招きやすいか？", answer: "骨盤の後傾を引き起こし、腰椎の生理的前弯を減少（フラットバック）させるため、腰椎へのストレスが増加しやすい。", image: "hamstring_shortness.png" },
+{ question: "股関節の伸展可動域不足は、歩行や走行時にどのような代償動作を招きやすいか？", answer: "股関節が後ろに伸びない分を補うため、骨盤を前傾させて腰椎を過剰に伸展（反り腰）してしまい、腰痛のリスクが高まる。", image: "hip_extension_deficit.png" },
+{ question: "胸椎の回旋可動域制限は、投球やスイング動作でどの関節に負担をかけるか？", answer: "肩関節や腰椎。胸椎が回らない分を、肩関節の過剰な水平外転や腰椎の無理な回旋で代償するため、ケガを招きやすい。", image: "thoracic_rotation_deficit.png" },
+{ question: "静的ストレッチ（スタティックストレッチ）の適切な保持時間は？", answer: "20〜30秒程度。短すぎると伸張反射が治まらず、長すぎても柔軟性向上の効果は頭打ちになりやすい。", image: "static_stretch.png" },
+{ question: "PNFストレッチ（ホールド・リラックス法など）の基本的なメカニズムは？", answer: "対象の筋肉を等尺性収縮させた後、脱力させ、そこからさらに伸張を加えることで、神経抑制系の反射（自己抑制）を利用して可動域を拡大する。", image: "pnf_stretch.png" },
+{ question: "ストレッチ指導で「自然な呼吸を止めないこと」を促す生理学的な理由は？", answer: "呼吸を止める（息む）と交感神経が優位になり筋緊張が高まるため。息を吐くときに副交感神経が働き、筋肉は弛緩しやすくなる。", image: "breathing.png" },
+{ question: "関節可動域を拡大させる指導において、柔軟性と共に確保すべき要素は何か？", answer: "関節の安定性（スタビリティ）。可動域が拡がっても、その広い範囲をコントロールできる筋力が伴わなければ、かえってケガのリスクが高まる。", image: "flexibility_caution.png" }
 ];
 
 let currentQuestionIndex = 0;
@@ -200,7 +198,6 @@ const currentQuiz = quizData[currentQuestionIndex];
 document.getElementById("progress-text").textContent = (currentQuestionIndex + 1) + " / " + quizData.length + " 問目";
 document.getElementById("question-text").textContent = "Q" + (currentQuestionIndex + 1) + ". " + currentQuiz.question;
 
-document.getElementById("furigana-container").style.display = "none";
 document.getElementById("answer-container").style.display = "none";
 
 const muscleImg = document.getElementById("muscle-img");
@@ -211,17 +208,17 @@ document.getElementById("muscle-img-wrapper").style.display = "block";
 } else {
 document.getElementById("muscle-img-wrapper").style.display = "none";
 }
+
+if (currentQuiz.answer.length < 10) {
+document.getElementById("answer-container").style.textAlign = "center";
+} else {
+document.getElementById("answer-container").style.textAlign = "left";
+}
 }
 
 function showAnswer() {
 isShowingAnswer = true;
 const currentQuiz = quizData[currentQuestionIndex];
-
-const furiganaContainer = document.getElementById("furigana-container");
-if (currentQuiz.furigana) {
-furiganaContainer.textContent = currentQuiz.furigana;
-furiganaContainer.style.display = "block";
-}
 
 const answerContainer = document.getElementById("answer-container");
 answerContainer.textContent = currentQuiz.answer;
